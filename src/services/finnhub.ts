@@ -49,17 +49,22 @@ class FinnhubService {
 
   async getQuote(symbol: string): Promise<FinnhubQuote | null> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/quote?symbol=${symbol}&token=${this.apiKey}`
-      );
+      console.log(`Fetching quote for symbol: ${symbol}`);
+      const url = `${this.baseUrl}/quote?symbol=${symbol}&token=${this.apiKey}`;
+      console.log(`API URL: ${url}`);
+      
+      const response = await fetch(url);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch quote');
+        console.error(`API Response not OK: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch quote: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log(`API Response for ${symbol}:`, data);
       
-      if (data.c === 0) {
+      if (data.c === 0 || !data.c) {
+        console.warn(`No valid price data for ${symbol}`);
         return null; // Invalid symbol or no data
       }
       
@@ -74,17 +79,22 @@ class FinnhubService {
     try {
       // For crypto, we need to add exchange prefix
       const cryptoSymbol = `BINANCE:${symbol}USDT`;
-      const response = await fetch(
-        `${this.baseUrl}/quote?symbol=${cryptoSymbol}&token=${this.apiKey}`
-      );
+      console.log(`Fetching crypto quote for symbol: ${cryptoSymbol}`);
+      const url = `${this.baseUrl}/quote?symbol=${cryptoSymbol}&token=${this.apiKey}`;
+      console.log(`Crypto API URL: ${url}`);
+      
+      const response = await fetch(url);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch crypto quote');
+        console.error(`Crypto API Response not OK: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch crypto quote: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log(`Crypto API Response for ${cryptoSymbol}:`, data);
       
-      if (data.c === 0) {
+      if (data.c === 0 || !data.c) {
+        console.warn(`No valid crypto price data for ${cryptoSymbol}`);
         return null;
       }
       
