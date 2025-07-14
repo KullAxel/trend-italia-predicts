@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, Target, Users, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { finnhubService } from "@/services/finnhub";
 
-// Mock data
-const mockPopularPredictions = [
-  { asset: "BTC", direction: 'up' as const, timeframe: '7d', count: 89, currentPrice: 43250.50 },
-  { asset: "AAPL", direction: 'up' as const, timeframe: '1d', count: 67, currentPrice: 189.25 },
-  { asset: "TSLA", direction: 'down' as const, timeframe: '30d', count: 45, currentPrice: 248.75 },
-  { asset: "ETH", direction: 'up' as const, timeframe: '7d', count: 72, currentPrice: 2650.80 },
-  { asset: "NVDA", direction: 'up' as const, timeframe: '1d', count: 58, currentPrice: 875.30 },
-  { asset: "GOOGL", direction: 'down' as const, timeframe: '7d', count: 41, currentPrice: 138.90 },
+// Base predictions with real market assets
+const basePopularPredictions = [
+  { asset: "BTC", symbol: "BTC", direction: 'up' as const, timeframe: '7d', count: 89, currentPrice: 0 },
+  { asset: "AAPL", symbol: "AAPL", direction: 'up' as const, timeframe: '1d', count: 67, currentPrice: 0 },
+  { asset: "TSLA", symbol: "TSLA", direction: 'down' as const, timeframe: '30d', count: 45, currentPrice: 0 },
+  { asset: "ETH", symbol: "ETH", direction: 'up' as const, timeframe: '7d', count: 72, currentPrice: 0 },
+  { asset: "NVDA", symbol: "NVDA", direction: 'up' as const, timeframe: '1d', count: 58, currentPrice: 0 },
+  { asset: "GOOGL", symbol: "GOOGL", direction: 'down' as const, timeframe: '7d', count: 41, currentPrice: 0 },
 ];
 
 const mockLeaderboard = [
@@ -27,6 +28,7 @@ const mockLeaderboard = [
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
+  const [popularPredictions, setPopularPredictions] = useState(basePopularPredictions);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +36,38 @@ export const HomePage = () => {
     if (userData) {
       setUser(JSON.parse(userData));
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchRealPrices = async () => {
+      const updatedPredictions = await Promise.all(
+        basePopularPredictions.map(async (prediction) => {
+          try {
+            let quote = null;
+            
+            // Handle crypto assets
+            if (prediction.symbol === 'BTC' || prediction.symbol === 'ETH') {
+              quote = await finnhubService.getCryptoQuote(prediction.symbol);
+            } else {
+              // Handle stock assets
+              quote = await finnhubService.getQuote(prediction.symbol);
+            }
+            
+            return {
+              ...prediction,
+              currentPrice: quote?.c || 0
+            };
+          } catch (error) {
+            console.error(`Error fetching price for ${prediction.symbol}:`, error);
+            return prediction;
+          }
+        })
+      );
+      
+      setPopularPredictions(updatedPredictions);
+    };
+
+    fetchRealPrices();
   }, []);
 
   const handleLogout = () => {
@@ -108,7 +142,7 @@ export const HomePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Popular Predictions */}
           <div className="lg:col-span-2">
-            <PopularPredictions predictions={mockPopularPredictions} />
+            <PopularPredictions predictions={popularPredictions} />
           </div>
 
           {/* Top Investors Preview */}
