@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { finnhubService, FinnhubAsset } from "@/services/finnhub";
 
 interface Asset {
   symbol: string;
@@ -36,16 +37,31 @@ export const AssetSearch = ({ onSelectAsset }: AssetSearchProps) => {
 
     setLoading(true);
     try {
-      // For now, we'll use the popular assets as a fallback
-      // In production, you would call the Finnhub API here
+      // First try to search via Finnhub API
+      const finnhubResults = await finnhubService.searchAssets(searchQuery);
+      
+      // Filter popular assets as fallback
+      const popularFiltered = popularAssets.filter(asset => 
+        asset.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        asset.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+      // Combine results, prioritizing Finnhub data but including popular assets
+      const combinedResults = [...finnhubResults, ...popularFiltered]
+        .filter((asset, index, self) => 
+          index === self.findIndex(a => a.symbol === asset.symbol)
+        )
+        .slice(0, 10); // Limit to 10 results
+      
+      setAssets(combinedResults);
+    } catch (error) {
+      console.error('Error searching assets:', error);
+      // Fallback to popular assets only
       const filtered = popularAssets.filter(asset => 
         asset.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
         asset.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setAssets(filtered);
-    } catch (error) {
-      console.error('Error searching assets:', error);
-      setAssets([]);
     } finally {
       setLoading(false);
     }

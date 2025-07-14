@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Clock, DollarSign } from "lucide-react";
+import { TrendingUp, TrendingDown, Clock, DollarSign, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { finnhubService } from "@/services/finnhub";
 
 interface Asset {
   symbol: string;
@@ -28,12 +29,41 @@ export const PredictionForm = ({ asset, onBack, onSubmit }: PredictionFormProps)
   const [direction, setDirection] = useState<'up' | 'down' | null>(null);
   const [timeframe, setTimeframe] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
+  const [priceLoading, setPriceLoading] = useState(true);
   const { toast } = useToast();
 
-  const currentPrice = Math.random() * 1000 + 100; // Mock price
+  useEffect(() => {
+    const fetchPrice = async () => {
+      setPriceLoading(true);
+      try {
+        let quote;
+        if (asset.type === 'crypto') {
+          quote = await finnhubService.getCryptoQuote(asset.symbol);
+        } else {
+          quote = await finnhubService.getQuote(asset.symbol);
+        }
+        
+        if (quote && quote.c > 0) {
+          setCurrentPrice(quote.c);
+        } else {
+          // Fallback to mock price if API fails
+          setCurrentPrice(Math.random() * 1000 + 100);
+        }
+      } catch (error) {
+        console.error('Error fetching price:', error);
+        // Fallback to mock price
+        setCurrentPrice(Math.random() * 1000 + 100);
+      } finally {
+        setPriceLoading(false);
+      }
+    };
+
+    fetchPrice();
+  }, [asset]);
 
   const handleSubmit = async () => {
-    if (!direction || !timeframe) {
+    if (!direction || !timeframe || !currentPrice) {
       toast({
         title: "Errore",
         description: "Seleziona una direzione e un periodo di tempo",
@@ -96,7 +126,16 @@ export const PredictionForm = ({ asset, onBack, onSubmit }: PredictionFormProps)
               <DollarSign className="h-4 w-4" />
               <span className="text-sm font-medium">Prezzo Attuale</span>
             </div>
-            <div className="text-2xl font-bold">${currentPrice.toFixed(2)}</div>
+            {priceLoading ? (
+              <div className="flex items-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-lg">Caricamento...</span>
+              </div>
+            ) : (
+              <div className="text-2xl font-bold">
+                ${currentPrice?.toFixed(2) || '---'}
+              </div>
+            )}
           </div>
         </div>
       </Card>
@@ -152,7 +191,7 @@ export const PredictionForm = ({ asset, onBack, onSubmit }: PredictionFormProps)
 
           <Button
             onClick={handleSubmit}
-            disabled={!direction || !timeframe || loading}
+            disabled={!direction || !timeframe || loading || priceLoading || !currentPrice}
             size="lg"
             className="w-full bg-gradient-primary shadow-primary"
           >
