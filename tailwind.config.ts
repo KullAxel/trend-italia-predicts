@@ -87,11 +87,16 @@ export default {
 				'gradient-primary': 'var(--gradient-primary)',
 				'gradient-bull': 'var(--gradient-bull)',
 				'gradient-bear': 'var(--gradient-bear)',
-				'gradient-gold': 'var(--gradient-gold)'
+				'gradient-gold': 'var(--gradient-gold)',
+				/* Add Robinhood-specific gradients */
+				'gradient-robinhood': 'linear-gradient(135deg, hsl(135 100% 39%) 0%, hsl(131 84% 52%) 100%)',
+				'gradient-dark': 'linear-gradient(135deg, hsl(0 0% 0%) 0%, hsl(0 0% 7.1%) 100%)'
 			},
 			boxShadow: {
 				'primary': 'var(--shadow-primary)',
-				'success': 'var(--shadow-success)'
+				'success': 'var(--shadow-success)',
+				'robinhood': '0 4px 20px -4px hsl(135 100% 39% / 0.3)',
+				'glow': '0 0 40px hsl(135 100% 39% / 0.2)'
 			},
 			transitionTimingFunction: {
 				'smooth': 'var(--transition-smooth)'

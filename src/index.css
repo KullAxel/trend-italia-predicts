@@ -8,120 +8,117 @@ All colors MUST be HSL.
 
 @layer base {
 :root {
-    --background: 240 10% 98%;
-    --foreground: 220 9% 15%;
+    /* Robinhood-inspired Dark Theme - Applied globally */
+    --background: 0 0% 0%; /* Pure black #000000 */
+    --foreground: 0 0% 94.5%; /* Very light gray #F1F1F1 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 9% 15%;
+    --card: 0 0% 7.1%; /* Dark gray #121212 */
+    --card-foreground: 0 0% 94.5%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 9% 15%;
+    --popover: 0 0% 7.1%;
+    --popover-foreground: 0 0% 94.5%;
 
-    --primary: 220 100% 54%;
+    --primary: 135 100% 39%; /* Robinhood green #00C805 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 220 9% 15%;
+    --secondary: 0 0% 11.8%; /* Darker gray #1E1E1E */
+    --secondary-foreground: 0 0% 94.5%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 11.8%;
+    --muted-foreground: 0 0% 63.9%;
 
-    --accent: 147 50% 47%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 131 84% 52%; /* Accent green #1FDB54 */
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 220 100% 54%;
+    --border: 0 0% 11.8%;
+    --input: 0 0% 11.8%;
+    --ring: 135 100% 39%;
 
-    /* Financial colors */
-    --bull: 142 76% 36%;
+    /* Financial colors - Using Robinhood greens */
+    --bull: 135 100% 39%; /* Robinhood green */
     --bull-foreground: 0 0% 100%;
-    --bear: 0 84% 60%;
+    --bear: 0 84% 60%; /* Keep red for losses */
     --bear-foreground: 0 0% 100%;
     
     /* Success colors */
-    --success: 142 76% 36%;
+    --success: 135 100% 39%;
     --success-foreground: 0 0% 100%;
     
     /* Warning colors */
-    --warning: 48 96% 53%;
+    --warning: 43 89% 38%;
     --warning-foreground: 0 0% 100%;
     
     /* Gold ranking */
-    --gold: 48 96% 53%;
+    --gold: 43 89% 38%;
     --gold-foreground: 0 0% 100%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-bull: linear-gradient(135deg, hsl(var(--bull)), hsl(142 76% 45%));
-    --gradient-bear: linear-gradient(135deg, hsl(var(--bear)), hsl(0 84% 70%));
-    --gradient-gold: linear-gradient(135deg, hsl(var(--gold)), hsl(48 96% 60%));
+    --gradient-primary: linear-gradient(135deg, hsl(135 100% 39%), hsl(131 84% 52%));
+    --gradient-bull: linear-gradient(135deg, hsl(135 100% 39%), hsl(131 84% 52%));
+    --gradient-bear: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 70%));
+    --gradient-gold: linear-gradient(135deg, hsl(43 89% 38%), hsl(43 89% 45%));
     
     /* Shadows */
-    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.3);
-    --shadow-success: 0 4px 20px -4px hsl(var(--success) / 0.4);
+    --shadow-primary: 0 10px 30px -10px hsl(135 100% 39% / 0.3);
+    --shadow-success: 0 4px 20px -4px hsl(135 100% 39% / 0.4);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar colors */
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 94.5%;
+    --sidebar-primary: 135 100% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 11.8%;
+    --sidebar-accent-foreground: 0 0% 94.5%;
+    --sidebar-border: 0 0% 11.8%;
+    --sidebar-ring: 135 100% 39%;
   }
 
+  /* Keep the same colors for dark mode since we're using dark theme globally */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 94.5%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 7.1%;
+    --card-foreground: 0 0% 94.5%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 7.1%;
+    --popover-foreground: 0 0% 94.5%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 135 100% 39%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 11.8%;
+    --secondary-foreground: 0 0% 94.5%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 11.8%;
+    --muted-foreground: 0 0% 63.9%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 131 84% 52%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --border: 0 0% 11.8%;
+    --input: 0 0% 11.8%;
+    --ring: 135 100% 39%;
+    
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 94.5%;
+    --sidebar-primary: 135 100% 39%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 0 0% 11.8%;
+    --sidebar-accent-foreground: 0 0% 94.5%;
+    --sidebar-border: 0 0% 11.8%;
+    --sidebar-ring: 135 100% 39%;
   }
 }
 
@@ -132,5 +129,12 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Force dark mode globally */
+    color-scheme: dark;
+  }
+
+  /* Ensure all components use the dark theme */
+  html {
+    color-scheme: dark;
   }
 }
