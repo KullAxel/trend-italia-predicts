@@ -18,7 +18,6 @@ import {
   XCircle,
   Loader
 } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 // Mock user data
 const mockUser = {
@@ -79,11 +78,12 @@ export const UserProfilePage = () => {
 
   // Prepare chart data
   const chartData = [
-    { name: 'Correct', value: user.correctPredictions, color: 'hsl(var(--success))' },
-    { name: 'Incorrect', value: user.incorrectPredictions, color: 'hsl(var(--destructive))' },
-    { name: 'Pending', value: user.pendingPredictions, color: 'hsl(var(--warning))' }
+    { name: 'Correct', value: user.correctPredictions, color: 'hsl(142, 76%, 36%)' },
+    { name: 'Incorrect', value: user.incorrectPredictions, color: 'hsl(0, 84%, 60%)' },
+    { name: 'Pending', value: user.pendingPredictions, color: 'hsl(43, 89%, 38%)' }
   ];
 
+  const total = user.correctPredictions + user.incorrectPredictions + user.pendingPredictions;
   const accuracy = user.totalPredictions > 0 
     ? ((user.correctPredictions / (user.correctPredictions + user.incorrectPredictions)) * 100).toFixed(1)
     : "0.0";
@@ -91,27 +91,87 @@ export const UserProfilePage = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'correct':
-        return <CheckCircle className="h-4 w-4 text-success" />;
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
       case 'incorrect':
-        return <XCircle className="h-4 w-4 text-destructive" />;
+        return <XCircle className="h-4 w-4 text-red-600" />;
       case 'pending':
-        return <Loader className="h-4 w-4 text-warning animate-spin" />;
+        return <Loader className="h-4 w-4 text-yellow-600 animate-spin" />;
       default:
         return null;
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'correct':
-        return 'text-success';
-      case 'incorrect':
-        return 'text-destructive';
-      case 'pending':
-        return 'text-warning';
-      default:
-        return 'text-muted-foreground';
+  // Simple SVG pie chart component
+  const SimplePieChart = ({ data }: { data: Array<{ name: string; value: number; color: string }> }) => {
+    if (total === 0) {
+      return (
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          No prediction data yet
+        </div>
+      );
     }
+
+    let cumulativePercentage = 0;
+    const radius = 80;
+    const centerX = 100;
+    const centerY = 100;
+
+    return (
+      <div className="flex flex-col items-center">
+        <svg width="200" height="200" className="mb-4">
+          {data.map((item, index) => {
+            const percentage = (item.value / total) * 100;
+            const startAngle = (cumulativePercentage / 100) * 360;
+            const endAngle = ((cumulativePercentage + percentage) / 100) * 360;
+            
+            cumulativePercentage += percentage;
+            
+            if (percentage === 0) return null;
+            
+            const startAngleRad = (startAngle - 90) * (Math.PI / 180);
+            const endAngleRad = (endAngle - 90) * (Math.PI / 180);
+            
+            const largeArcFlag = percentage > 50 ? 1 : 0;
+            
+            const x1 = centerX + radius * Math.cos(startAngleRad);
+            const y1 = centerY + radius * Math.sin(startAngleRad);
+            const x2 = centerX + radius * Math.cos(endAngleRad);
+            const y2 = centerY + radius * Math.sin(endAngleRad);
+            
+            const pathData = [
+              `M ${centerX} ${centerY}`,
+              `L ${x1} ${y1}`,
+              `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+              'Z'
+            ].join(' ');
+            
+            return (
+              <path
+                key={item.name}
+                d={pathData}
+                fill={item.color}
+                stroke="white"
+                strokeWidth="2"
+              />
+            );
+          })}
+        </svg>
+        
+        <div className="flex flex-wrap justify-center gap-4">
+          {data.map((item) => (
+            <div key={item.name} className="flex items-center space-x-2">
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: item.color }}
+              />
+              <span className="text-sm text-muted-foreground">
+                {item.name}: {item.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -206,27 +266,7 @@ export const UserProfilePage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={chartData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={40}
-                        outerRadius={80}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {chartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
+                <SimplePieChart data={chartData} />
                 <div className="mt-4 text-center">
                   <p className="text-2xl font-bold text-foreground">{accuracy}%</p>
                   <p className="text-sm text-muted-foreground">Overall Accuracy</p>
@@ -255,9 +295,9 @@ export const UserProfilePage = () => {
                           <div className="flex items-center space-x-2">
                             <span className="font-medium text-foreground">{prediction.asset}</span>
                             {prediction.direction === 'up' ? (
-                              <TrendingUp className="h-3 w-3 text-success" />
+                              <TrendingUp className="h-3 w-3 text-green-600" />
                             ) : (
-                              <TrendingDown className="h-3 w-3 text-destructive" />
+                              <TrendingDown className="h-3 w-3 text-red-600" />
                             )}
                           </div>
                           <div className="text-xs text-muted-foreground">
