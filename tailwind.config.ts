@@ -85,6 +85,7 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-header': 'var(--gradient-header)',
 				'gradient-bull': 'var(--gradient-bull)',
 				'gradient-bear': 'var(--gradient-bear)',
 				'gradient-gold': 'var(--gradient-gold)',

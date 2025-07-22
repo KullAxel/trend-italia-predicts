@@ -12,7 +12,8 @@ export const Header = ({ isLoggedIn = false, username, onLogout }: HeaderProps) 
   const navigate = useNavigate();
 
   return (
-    <header className="bg-gradient-primary border-b shadow-primary">
+    <header className="bg-gradient-header border-b border-white/10 shadow-lg"
+    >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
           <TrendingUp className="h-8 w-8 text-white" />
