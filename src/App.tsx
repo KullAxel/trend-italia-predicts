@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { PredictionsPage } from "./pages/PredictionsPage";
 import { LeaderboardPage } from "./pages/LeaderboardPage";
+import { UserProfilePage } from "./pages/UserProfilePage";
 import { Auth } from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/signup" element={<Auth mode="signup" />} />
           <Route path="/previsioni" element={<PredictionsPage />} />
           <Route path="/classifica" element={<LeaderboardPage />} />
+          <Route path="/profilo" element={<UserProfilePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

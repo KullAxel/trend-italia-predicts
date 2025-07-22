@@ -38,6 +38,14 @@ export const Header = ({ isLoggedIn = false, username, onLogout }: HeaderProps) 
           >
             Fai una Previsione
           </Link>
+          {isLoggedIn && (
+            <Link 
+              to="/profilo" 
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              Profilo
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center space-x-3">
