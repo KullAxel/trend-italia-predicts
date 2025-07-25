@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { TrendingUp, User, LogOut } from "lucide-react";
+import { TrendingUp, User, LogOut, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -39,32 +46,34 @@ export const Header = ({ isLoggedIn = false, username, onLogout }: HeaderProps) 
           >
             Fai una Previsione
           </Link>
-          {isLoggedIn && (
-            <Link 
-              to="/profilo" 
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              Profilo
-            </Link>
-          )}
         </nav>
 
         <div className="flex items-center space-x-3">
           {isLoggedIn ? (
             <>
-              <div className="flex items-center space-x-2 text-white">
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">{username}</span>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={onLogout}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                <LogOut className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Esci</span>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="flex items-center space-x-2 text-white hover:bg-white/10 p-2"
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">{username}</span>
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => navigate('/profilo')}>
+                    <User className="h-4 w-4 mr-2" />
+                    My Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={onLogout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Esci
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           ) : (
             <>
